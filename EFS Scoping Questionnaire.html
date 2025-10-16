@@ -1,0 +1,2394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS Scoping Questionnaire for FICO Enterprise Fraud Solution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Left Navigation Styles - Increased width */
+        .left-nav {
+            width: 400px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #34495e;
+        }
+        
+        .summary-section {
+            margin-bottom: 20px;
+        }
+        
+        .summary-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary-list {
+            list-style: none;
+        }
+        
+        .summary-item {
+            background: #34495e;
+            padding: 6px 10px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            font-size: 12px;
+            border-left: 3px solid #0A6DE6;
+        }
+        
+        .empty-state {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 12px;
+        }
+        
+        .progress-indicator {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #34495e;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0A6DE6, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: #bdc3c7;
+            text-align: center;
+        }
+        
+        /* Main Content Styles - Adjusted for wider left nav */
+        .main-content {
+            margin-left: 400px;
+            flex: 1;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 950px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #0A6DE6;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .question-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #0A6DE6;
+        }
+        
+        .question-required {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .question-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .required-indicator {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .radio-item, .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .radio-item:hover, .checkbox-item:hover {
+            background-color: #e8f4f8;
+        }
+        
+        .radio-item input, .checkbox-item input {
+            margin-right: 10px;
+            transform: scale(1.1);
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #0A6DE6;
+            box-shadow: 0 0 0 2px rgba(10, 109, 230, 0.2);
+        }
+        
+        /* Slider styles */
+        .slider-container {
+            margin: 15px 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .slider-value {
+            background: #0A6DE6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0A6DE6;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0A6DE6;
+            cursor: pointer;
+            border: none;
+        }
+        
+        /* Data Formats Table */
+        .data-formats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .data-formats-table th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-formats-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .data-formats-table tr:hover:not(.disabled) {
+            background-color: #f8f9fa;
+        }
+        
+        .data-formats-table tr.disabled {
+            background-color: #f5f6fa;
+            color: #7f8c8d;
+            opacity: 0.6;
+        }
+        
+        .data-formats-table tr.disabled input {
+            cursor: not-allowed;
+        }
+        
+        .data-type-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .data-type-description {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 3px;
+        }
+        
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        .validation-message {
+            color: #e74c3c;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn.primary {
+            background-color: #0A6DE6;
+            color: white;
+        }
+        
+        .nav-btn.primary:hover {
+            background-color: rgba(10, 109, 230, 0.8);
+        }
+        
+        .nav-btn.secondary {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .nav-btn.secondary:hover {
+            background-color: #bdc3c7;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+        
+        /* Breadcrumb Styles - Adjusted for wider left nav */
+        .breadcrumb-container {
+            position: fixed;
+            bottom: 0;
+            left: 400px;
+            right: 0;
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .breadcrumb-step {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .breadcrumb-step.completed {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .breadcrumb-step.active {
+            background: #0A6DE6;
+            color: white;
+        }
+        
+        .breadcrumb-step.pending {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+        
+        .breadcrumb-arrow {
+            color: #bdc3c7;
+            font-size: 12px;
+        }
+        
+        .step-number {
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+        }
+        
+        .breadcrumb-step.pending .step-number {
+            background: #bdc3c7;
+            color: white;
+        }
+        
+        /* Conditional Section Styles */
+        .conditional-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f6f3;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+            display: none;
+            animation: slideIn 0.3s ease-in-out;
+        }
+        
+        .conditional-section.show {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CSV and HTML Display Styles */
+        .output-display {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #2ecc71;
+            display: none;
+        }
+
+        .output-display.show {
+            display: block;
+        }
+
+        .output-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .output-content {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-bottom: 15px;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .download-btn {
+            padding: 10px 20px;
+            background-color: #0A6DE6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .download-btn:hover {
+            background-color: rgba(10, 109, 230, 0.8);
+        }
+
+        .download-btn.secondary {
+            background-color: #2ecc71;
+        }
+
+        .download-btn.secondary:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .left-nav {
+                width: 320px;
+            }
+            
+            .main-content {
+                margin-left: 320px;
+            }
+            
+            .breadcrumb-container {
+                left: 320px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .data-formats-table {
+                font-size: 14px;
+            }
+            
+            .data-formats-table th,
+            .data-formats-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Left Navigation -->
+    <div class="left-nav">
+        <div class="nav-title">Selection Summary</div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Client Information</div>
+            <ul class="summary-list" id="clientInfoSummary">
+                <li class="empty-state">No information provided</li>
+            </ul>
+        </div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Use Cases</div>
+            <ul class="summary-list" id="useCasesSummary">
+                <li class="empty-state">No use cases selected</li>
+            </ul>
+        </div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Channels & Options</div>
+            <ul class="summary-list" id="channelsSummary">
+                <li class="empty-state">No channels selected</li>
+            </ul>
+        </div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Data Formats</div>
+            <ul class="summary-list" id="dataFormatsSummary">
+                <li class="empty-state">No formats selected</li>
+            </ul>
+        </div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Analytics</div>
+            <ul class="summary-list" id="analyticsSummary">
+                <li class="empty-state">No analytics selected</li>
+            </ul>
+        </div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Services</div>
+            <ul class="summary-list" id="servicesSummary">
+                <li class="empty-state">No services selected</li>
+            </ul>
+        </div>
+        
+        <div class="summary-section">
+            <div class="summary-header">Rollout Strategy</div>
+            <ul class="summary-list" id="rolloutSummary">
+                <li class="empty-state">No rollout strategy selected</li>
+            </ul>
+        </div>
+        
+        <div class="progress-indicator">
+            <div class="summary-header">Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Complete</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <h1>PS Scoping Questionnaire for FICO Enterprise Fraud Solution</h1>
+            
+            <form id="scopingForm">
+                <!-- Section 1: Client Info -->
+                <div class="section active" id="clientInfoSection">
+                    <div class="section-title">Client Info</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Select the region<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="region" value="APJ" required>
+                                <span>APJ</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="region" value="LAC" required>
+                                <span>LAC</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="region" value="NORAM" required>
+                                <span>NORAM</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="region" value="EMEA" required>
+                                <span>EMEA</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group question-required">
+                        <div class="question-title">Name of the client<span class="required-indicator">*</span></div>
+                        <input type="text" id="clientName" class="text-input required" placeholder="Enter client name" required>
+                    </div>
+
+                    <div class="question-group question-required">
+                        <div class="question-title">Sales Force Opportunity Number<span class="required-indicator">*</span></div>
+                        <input type="text" id="opportunityNumber" class="text-input required" placeholder="Enter opportunity number" required>
+                    </div>
+
+                    <div class="question-group question-required">
+                        <div class="question-title">Customer Type<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="customerType" value="Bank" required>
+                                <span>Bank</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="customerType" value="Processor" required>
+                                <span>Processor</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group question-required">
+                        <div class="question-title">Existing FICO Fraud Solution User<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="existingUser" value="Existing Falcon User" required>
+                                <span>Existing Falcon User</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="existingUser" value="Existing DMP User" required>
+                                <span>Existing DMP User</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="existingUser" value="New Fraud Customer" required>
+                                <span>New Fraud Customer</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: UseCase -->
+                <div class="section" id="useCaseSection">
+                    <div class="section-title">UseCase</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Select Fraud Use Cases that are in scope<span class="required-indicator">*</span></div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="transactionFraud" value="Transaction Fraud">
+                                <span>Transaction Fraud</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="acquiringFraud" value="Acquiring Fraud">
+                                <span>Acquiring Fraud</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="applicationFraud" value="Application Fraud">
+                                <span>Application Fraud</span>
+                            </label>
+                        </div>
+
+                        <!-- Transaction Fraud Channels -->
+                        <div class="conditional-section" id="transactionChannelsSection">
+                            <div class="question-title">Transaction Fraud Channels<span class="required-indicator">*</span></div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionChannels" value="Credit Card">
+                                    <span>Credit Card</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionChannels" value="Debit Card">
+                                    <span>Debit Card</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionChannels" value="Payment Channel">
+                                    <span>Payment Channel</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Acquiring Fraud Options -->
+                        <div class="conditional-section" id="acquiringOptionsSection">
+                            <div class="question-title">Acquiring Fraud<span class="required-indicator">*</span></div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="acquiringOptions" value="Merchant Monitoring">
+                                    <span>Merchant Monitoring</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="acquiringOptions" value="ATM Monitoring">
+                                    <span>ATM Monitoring</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Application Fraud Options -->
+                        <div class="conditional-section" id="applicationOptionsSection">
+                            <div class="question-title">Application Fraud<span class="required-indicator">*</span></div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationOptions" value="Banking - Consumer (Retail)">
+                                    <span>Banking - Consumer (Retail)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationOptions" value="Banking -SME ( Small & Medium Enterprise)">
+                                    <span>Banking - SME (Small & Medium Enterprise)</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationOptions" value="Banking -Corporate">
+                                    <span>Banking - Corporate</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationOptions" value="Telco">
+                                    <span>Telco</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationOptions" value="Auto Finance">
+                                    <span>Auto Finance</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Input Data -->
+                <div class="section" id="inputDataSection">
+                    <div class="section-title">Input Data</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Will the client use FICO's Tokenization service for PCI Compliance?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="tokenization" value="Yes" required>
+                                <span>Yes (Client will Use FICO's obfuscation/tokenization service)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="tokenization" value="No" required>
+                                <span>No (Client will tokenize fields prior to calling FICO Service)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <div class="question-title">Data Format Selection</div>
+                        <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 15px;">
+                            Select the preferred format for each applicable data type. Client Format is selected as default.
+                        </p>
+                        
+                        <table class="data-formats-table" id="dataFormatsTable">
+                            <thead>
+                                <tr>
+                                    <th>Data Type</th>
+                                    <th>Client Format</th>
+                                    <th>FICO Format</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">BankingTransaction or Payment (RBTRAN)</div>
+                                        <div class="data-type-description">Banking transaction data</div>
+                                    </td>
+                                    <td><input type="radio" name="RBTRAN" value="Client Format" checked></td>
+                                    <td><input type="radio" name="RBTRAN" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">CardTransaction (PITRAN)</div>
+                                        <div class="data-type-description">Credit/debit card transaction data</div>
+                                    </td>
+                                    <td><input type="radio" name="PITRAN" value="Client Format" checked></td>
+                                    <td><input type="radio" name="PITRAN" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">AccountInformation (AIS)</div>
+                                        <div class="data-type-description">Account information service data</div>
+                                    </td>
+                                    <td><input type="radio" name="AIS" value="Client Format" checked></td>
+                                    <td><input type="radio" name="AIS" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">CustomerInformation (CIS)</div>
+                                        <div class="data-type-description">Customer information service data</div>
+                                    </td>
+                                    <td><input type="radio" name="CIS" value="Client Format" checked></td>
+                                    <td><input type="radio" name="CIS" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">ConfirmedFraudRecord (FRD)</div>
+                                        <div class="data-type-description">Historical fraud records</div>
+                                    </td>
+                                    <td><input type="radio" name="FRD" value="Client Format" checked></td>
+                                    <td><input type="radio" name="FRD" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">AccountLedger (Ledger)</div>
+                                        <div class="data-type-description">Account ledger information</div>
+                                    </td>
+                                    <td><input type="radio" name="Ledger" value="Client Format" checked></td>
+                                    <td><input type="radio" name="Ledger" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">ActivityEvent (NMON)</div>
+                                        <div class="data-type-description">Network monitoring events</div>
+                                    </td>
+                                    <td><input type="radio" name="NMON" value="Client Format" checked></td>
+                                    <td><input type="radio" name="NMON" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">PaymentInstrument (PIS)</div>
+                                        <div class="data-type-description">Payment instrument data</div>
+                                    </td>
+                                    <td><input type="radio" name="PIS" value="Client Format" checked></td>
+                                    <td><input type="radio" name="PIS" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">ScamRecord (SCAM)</div>
+                                        <div class="data-type-description">Scam detection records</div>
+                                    </td>
+                                    <td><input type="radio" name="SCAM" value="Client Format" checked></td>
+                                    <td><input type="radio" name="SCAM" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">Other External Data</div>
+                                        <div class="data-type-description">TMX, BioCatch, Emailage etc.</div>
+                                    </td>
+                                    <td><input type="radio" name="ExternalData" value="Client Format" checked></td>
+                                    <td><input type="radio" name="ExternalData" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">Merchant Demographics</div>
+                                        <div class="data-type-description">Merchant profile information</div>
+                                    </td>
+                                    <td><input type="radio" name="MerchantDemo" value="Client Format" checked></td>
+                                    <td><input type="radio" name="MerchantDemo" value="FICO Format"></td>
+                                </tr>
+                                <tr class="data-row">
+                                    <td>
+                                        <div class="data-type-name">Application Data</div>
+                                        <div class="data-type-description">Application form data</div>
+                                    </td>
+                                    <td><input type="radio" name="ApplicationData" value="Client Format" checked></td>
+                                    <td><input type="radio" name="ApplicationData" value="FICO Format"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section 4: Analytics -->
+                <div class="section" id="analyticsSection">
+                    <div class="section-title">Analytics</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Is FICO Consortium or FICO Provided Custom Model in Scope?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="ficoModel" value="Yes" id="ficoModelYes" required>
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="ficoModel" value="No" required>
+                                <span>No</span>
+                            </label>
+                        </div>
+
+                        <div class="conditional-section" id="ficoModelCountSection">
+                            <div class="question-title">Enter number of FICO models in Scope<span class="required-indicator">*</span></div>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="ficoModelCount" value="1">
+                                    <span>1</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="ficoModelCount" value="2">
+                                    <span>2</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="ficoModelCount" value="3">
+                                    <span>3</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="ficoModelCount" value="4">
+                                    <span>4</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="ficoModelCount" value="5">
+                                    <span>5</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="ficoModelCount" value="More than 5">
+                                    <span>More than 5</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group question-required">
+                        <div class="question-title">Is Client Planning to integrate their own scoring model in processing flow?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="clientModel" value="Yes" id="clientModelYes" required>
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="clientModel" value="No" required>
+                                <span>No</span>
+                            </label>
+                        </div>
+
+                        <div class="conditional-section" id="clientModelCountSection">
+                            <div class="question-title">Enter number of Client's internal models in Scope<span class="required-indicator">*</span></div>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="clientModelCount" value="1">
+                                    <span>1</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="clientModelCount" value="2">
+                                    <span>2</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="clientModelCount" value="3">
+                                    <span>3</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="clientModelCount" value="4">
+                                    <span>4</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="clientModelCount" value="5">
+                                    <span>5</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="clientModelCount" value="More than 5">
+                                    <span>More than 5</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Communication Services -->
+                <div class="section" id="communicationServicesSection">
+                    <div class="section-title">Communication Services</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">SMS or other notification system in Scope?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="notificationSystem" value="Yes" id="notificationYes" required>
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="notificationSystem" value="No" required>
+                                <span>No</span>
+                            </label>
+                        </div>
+
+                        <div class="conditional-section" id="notificationDetailsSection">
+                            <div class="question-title">Additional Integration Details for Notification Interface<span class="required-indicator">*</span></div>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="notificationDetails" value="FICO CCS">
+                                    <span>FICO CCS</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="notificationDetails" value="Other External Service">
+                                    <span>Other External Service</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="notificationDetails" value="Both">
+                                    <span>Both</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Case Manager -->
+                <div class="section" id="caseManagerSection">
+                    <div class="section-title">Case Manager</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Will the client use FICO's Case Manager?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="caseManager" value="Yes" id="caseManagerYes" required>
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="caseManager" value="No" required>
+                                <span>No</span>
+                            </label>
+                        </div>
+
+                        <!-- Transaction Case Manager Options -->
+                        <div class="conditional-section" id="transactionCaseManagerSection">
+                            <div class="question-title">Transaction Fraud FICO Case Manager Modules in Scope</div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionCaseManager" value="Transaction Case Manager">
+                                    <span>Transaction Case Manager</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionCaseManager" value="Customer Case Manager">
+                                    <span>Customer Case Manager</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionCaseManager" value="Investigative Case Manager">
+                                    <span>Investigative Case Manager</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="transactionCaseManager" value="Custom UI For Case Manager">
+                                    <span>Custom UI For Case Manager</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Application Case Manager Options -->
+                        <div class="conditional-section" id="applicationCaseManagerSection">
+                            <div class="question-title">Application Fraud Case Manager</div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationCaseManager" value="Application case Manager">
+                                    <span>Application Case Manager</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="applicationCaseManager" value="Custom UI For Case Manager">
+                                    <span>Custom UI For Case Manager</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Merchant Case Manager Options -->
+                        <div class="conditional-section" id="merchantCaseManagerSection">
+                            <div class="question-title">Merchant Fraud Case Manager</div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="merchantCaseManager" value="Merchant case Manager">
+                                    <span>Merchant Case Manager</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="merchantCaseManager" value="Custom UI For Case Manager">
+                                    <span>Custom UI For Case Manager</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 7: Rules Support -->
+                <div class="section" id="rulesSupportSection">
+                    <div class="section-title">Rules Support</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Support Model for Fraud Strategies<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="rulesSupport" value="Preferred Model" checked required>
+                                <span>FICO will provide Training and Client will own manage rules (Preferred Model)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="rulesSupport" value="Extended Support" required>
+                                <span>In addition to training FICO PS will provide up to 50 hours support for each usecase for adhoc support (Extended Support)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="rulesSupport" value="Premium Support" required>
+                                <span>FICO to define rules for initial launch but client will manage rules after go-live (Premium Support)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 8: Rollout Strategy -->
+                <div class="section" id="rolloutStrategySection">
+                    <div class="section-title">Rollout Strategy</div>
+                    
+                    <div class="question-group question-required">
+                        <div class="question-title">Is this a multi-country rollout?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="multiCountry" value="Yes" id="multiCountryYes" required>
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="multiCountry" value="No" required>
+                                <span>No</span>
+                            </label>
+                        </div>
+
+                        <div class="conditional-section" id="countryCountSection">
+                            <div class="question-title">Number of countries in scope<span class="required-indicator">*</span></div>
+                            <div class="slider-container">
+                                <div class="slider-label">
+                                    <span>Countries:</span>
+                                    <span class="slider-value" id="countryValue">1</span>
+                                </div>
+                                <input type="range" name="countryCount" id="countrySlider" class="slider" min="1" max="100" value="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group question-required">
+                        <div class="question-title">Is this a multiphased rollout?<span class="required-indicator">*</span></div>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="multiPhased" value="Yes" id="multiPhasedYes" required>
+                                <span>Yes</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="multiPhased" value="No" required>
+                                <span>No</span>
+                            </label>
+                        </div>
+
+                        <div class="conditional-section" id="phaseCountSection">
+                            <div class="question-title">Enter number of expected phases for phased rollout<span class="required-indicator">*</span></div>
+                            <div class="slider-container">
+                                <div class="slider-label">
+                                    <span>Phases:</span>
+                                    <span class="slider-value" id="phaseValue">1</span>
+                                </div>
+                                <input type="range" name="phaseCount" id="phaseSlider" class="slider" min="1" max="10" value="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 9: Review & Submit -->
+                <div class="section" id="reviewSection">
+                    <div class="section-title">Review & Submit</div>
+                    
+                    <div class="question-group">
+                        <div class="question-title">Review Your Selections</div>
+                        <p style="color: #7f8c8d; margin-bottom: 20px;">Please review your selections in the summary panel on the left. You can go back to previous sections to make changes if needed.</p>
+                        
+                        <div id="finalReview" style="background: #f8f9fa; padding: 20px; border-radius: 6px; border-left: 4px solid #0A6DE6;">
+                            <h3 style="color: #2c3e50; margin-bottom: 15px;">Ready to Submit</h3>
+                            <p style="color: #7f8c8d;">Your scoping requirements are ready for submission. Click the submit button below to complete the process.</p>
+                        </div>
+                    </div>
+
+                    <!-- Output Display Section -->
+                    <div class="output-display" id="outputDisplay">
+                        <div class="output-title">Generated Output Files</div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; margin-bottom: 10px;">CSV Content:</h4>
+                            <div class="output-content" id="csvContent"></div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; margin-bottom: 10px;">HTML Summary:</h4>
+                            <div class="output-content" id="htmlContent"></div>
+                        </div>
+                        
+                        <div class="download-buttons">
+                            <button type="button" class="download-btn" id="downloadCsvBtn">Download CSV File</button>
+                            <button type="button" class="download-btn secondary" id="downloadHtmlBtn">Download HTML Summary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="nav-buttons">
+                    <div>
+                        <button type="button" class="nav-btn secondary" id="prevBtn">Previous</button>
+                        <span class="validation-message" id="validationMessage"></span>
+                    </div>
+                    <div>
+                        <button type="button" class="nav-btn primary" id="nextBtn">Next</button>
+                        <button type="submit" class="nav-btn primary" id="submitBtn" style="display: none;">Submit Scoping Requirements</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom Breadcrumbs -->
+    <div class="breadcrumb-container">
+        <div class="breadcrumb">
+            <div class="breadcrumb-step active" id="step1">
+                <span class="step-number">1</span>
+                <span>Client</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step2">
+                <span class="step-number">2</span>
+                <span>UseCase</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step3">
+                <span class="step-number">3</span>
+                <span>Input Data</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step4">
+                <span class="step-number">4</span>
+                <span>Analytics</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step5">
+                <span class="step-number">5</span>
+                <span>Comm Services</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step6">
+                <span class="step-number">6</span>
+                <span>Case Manager</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step7">
+                <span class="step-number">7</span>
+                <span>Rules</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step8">
+                <span class="step-number">8</span>
+                <span>Rollout</span>
+            </div>
+            <span class="breadcrumb-arrow">→</span>
+            <div class="breadcrumb-step pending" id="step9">
+                <span class="step-number">9</span>
+                <span>Review</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSection = 0;
+        const sections = [
+            'clientInfoSection',
+            'useCaseSection', 
+            'inputDataSection',
+            'analyticsSection',
+            'communicationServicesSection',
+            'caseManagerSection',
+            'rulesSupportSection',
+            'rolloutStrategySection',
+            'reviewSection'
+        ];
+
+        const breadcrumbSteps = [
+            'step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8', 'step9'
+        ];
+
+        // Navigation elements
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const validationMessage = document.getElementById('validationMessage');
+
+        // Summary elements
+        const summaryElements = {
+            clientInfo: document.getElementById('clientInfoSummary'),
+            useCases: document.getElementById('useCasesSummary'),
+            channels: document.getElementById('channelsSummary'),
+            dataFormats: document.getElementById('dataFormatsSummary'),
+            analytics: document.getElementById('analyticsSummary'),
+            services: document.getElementById('servicesSummary'),
+            rollout: document.getElementById('rolloutSummary')
+        };
+
+        // Progress elements
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        // Output elements
+        const outputDisplay = document.getElementById('outputDisplay');
+        const csvContent = document.getElementById('csvContent');
+        const htmlContent = document.getElementById('htmlContent');
+        const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+        const downloadHtmlBtn = document.getElementById('downloadHtmlBtn');
+
+        // Slider elements
+        const countrySlider = document.getElementById('countrySlider');
+        const countryValue = document.getElementById('countryValue');
+        const phaseSlider = document.getElementById('phaseSlider');
+        const phaseValue = document.getElementById('phaseValue');
+
+        // Validation functions
+        function validateCurrentSection() {
+            const currentSectionElement = document.getElementById(sections[currentSection]);
+            const requiredInputs = currentSectionElement.querySelectorAll('input[required], input[type="checkbox"][data-required="true"]');
+            const validationErrors = [];
+
+            // Check required radio buttons and text inputs
+            const requiredGroups = {};
+            requiredInputs.forEach(input => {
+                if (input.type === 'radio') {
+                    if (!requiredGroups[input.name]) {
+                        requiredGroups[input.name] = false;
+                    }
+                    if (input.checked) {
+                        requiredGroups[input.name] = true;
+                    }
+                } else if (input.type === 'text') {
+                    if (!input.value.trim()) {
+                        validationErrors.push(`${input.previousElementSibling ? input.previousElementSibling.textContent : 'Field'} is required`);
+                    }
+                }
+            });
+
+            // Check required groups
+            Object.entries(requiredGroups).forEach(([groupName, isValid]) => {
+                if (!isValid) {
+                    const label = currentSectionElement.querySelector(`input[name="${groupName}"]`).closest('.question-group').querySelector('.question-title').textContent.replace('*', '');
+                    validationErrors.push(`${label} is required`);
+                }
+            });
+
+            // Special validation for use cases
+            if (currentSection === 1) { // Use case section
+                const anyUseCaseSelected = document.querySelectorAll('#transactionFraud:checked, #acquiringFraud:checked, #applicationFraud:checked').length > 0;
+                if (!anyUseCaseSelected) {
+                    validationErrors.push('At least one use case must be selected');
+                }
+
+                // Validate conditional required fields
+                if (document.getElementById('transactionFraud').checked) {
+                    const transactionChannelsSelected = document.querySelectorAll('input[name="transactionChannels"]:checked').length > 0;
+                    if (!transactionChannelsSelected) {
+                        validationErrors.push('Transaction fraud channels must be selected when Transaction Fraud is selected');
+                    }
+                }
+
+                if (document.getElementById('acquiringFraud').checked) {
+                    const acquiringOptionsSelected = document.querySelectorAll('input[name="acquiringOptions"]:checked').length > 0;
+                    if (!acquiringOptionsSelected) {
+                        validationErrors.push('Acquiring fraud options must be selected when Acquiring Fraud is selected');
+                    }
+                }
+
+                if (document.getElementById('applicationFraud').checked) {
+                    const applicationOptionsSelected = document.querySelectorAll('input[name="applicationOptions"]:checked').length > 0;
+                    if (!applicationOptionsSelected) {
+                        validationErrors.push('Application fraud options must be selected when Application Fraud is selected');
+                    }
+                }
+            }
+
+            // Validate conditional fields in Analytics section
+            if (currentSection === 3) { // Analytics section
+                const ficoModelYes = document.querySelector('input[name="ficoModel"]:checked')?.value === 'Yes';
+                if (ficoModelYes) {
+                    const ficoModelCount = document.querySelector('input[name="ficoModelCount"]:checked');
+                    if (!ficoModelCount) {
+                        validationErrors.push('Number of FICO models must be specified when FICO models are in scope');
+                    }
+                }
+
+                const clientModelYes = document.querySelector('input[name="clientModel"]:checked')?.value === 'Yes';
+                if (clientModelYes) {
+                    const clientModelCount = document.querySelector('input[name="clientModelCount"]:checked');
+                    if (!clientModelCount) {
+                        validationErrors.push('Number of client models must be specified when client models are in scope');
+                    }
+                }
+            }
+
+            // Validate conditional fields in Communication Services section
+            if (currentSection === 4) { // Communication Services section
+                const notificationYes = document.querySelector('input[name="notificationSystem"]:checked')?.value === 'Yes';
+                if (notificationYes) {
+                    const notificationDetails = document.querySelector('input[name="notificationDetails"]:checked');
+                    if (!notificationDetails) {
+                        validationErrors.push('Notification interface details must be specified when notification system is in scope');
+                    }
+                }
+            }
+
+            return validationErrors;
+        }
+
+        function showValidationMessage(errors) {
+            if (errors.length > 0) {
+                validationMessage.textContent = errors[0];
+                validationMessage.style.display = 'inline';
+                return false;
+            } else {
+                validationMessage.style.display = 'none';
+                return true;
+            }
+        }
+
+        // Utility functions
+        function createSummaryItem(text) {
+            const li = document.createElement('li');
+            li.className = 'summary-item';
+            li.textContent = text;
+            return li;
+        }
+
+        function showEmptyState(container, message) {
+            container.innerHTML = `<li class="empty-state">${message}</li>`;
+        }
+
+        // Function to generate CSV content with all placeholders including new Rollout Strategy fields
+        function generateCSVContent() {
+            const form = document.getElementById('scopingForm');
+            const formData = new FormData(form);
+            
+            // Define all possible fields with placeholders
+            const csvData = {
+                // Client Information
+                'Region': formData.get('region') || '',
+                'Client_Name': document.getElementById('clientName').value || '',
+                'Opportunity_Number': document.getElementById('opportunityNumber').value || '',
+                'Customer_Type': formData.get('customerType') || '',
+                'Existing_FICO_Fraud_Solution_User': formData.get('existingUser') || '',
+                
+                // Use Cases
+                'Transaction_Fraud': document.getElementById('transactionFraud').checked ? 'Yes' : 'No',
+                'Acquiring_Fraud': document.getElementById('acquiringFraud').checked ? 'Yes' : 'No',
+                'Application_Fraud': document.getElementById('applicationFraud').checked ? 'Yes' : 'No',
+                
+                // Transaction Channels
+                'Credit_Card': document.querySelector('input[name="transactionChannels"][value="Credit Card"]')?.checked ? 'Yes' : 'No',
+                'Debit_Card': document.querySelector('input[name="transactionChannels"][value="Debit Card"]')?.checked ? 'Yes' : 'No',
+                'Payment_Channel': document.querySelector('input[name="transactionChannels"][value="Payment Channel"]')?.checked ? 'Yes' : 'No',
+                
+                // Acquiring Options
+                'Merchant_Monitoring': document.querySelector('input[name="acquiringOptions"][value="Merchant Monitoring"]')?.checked ? 'Yes' : 'No',
+                'ATM_Monitoring': document.querySelector('input[name="acquiringOptions"][value="ATM Monitoring"]')?.checked ? 'Yes' : 'No',
+                
+                // Application Options
+                'Banking_Consumer_Retail': document.querySelector('input[name="applicationOptions"][value="Banking - Consumer (Retail)"]')?.checked ? 'Yes' : 'No',
+                'Banking_SME': document.querySelector('input[name="applicationOptions"][value="Banking -SME ( Small & Medium Enterprise)"]')?.checked ? 'Yes' : 'No',
+                'Banking_Corporate': document.querySelector('input[name="applicationOptions"][value="Banking -Corporate"]')?.checked ? 'Yes' : 'No',
+                'Telco': document.querySelector('input[name="applicationOptions"][value="Telco"]')?.checked ? 'Yes' : 'No',
+                'Auto_Finance': document.querySelector('input[name="applicationOptions"][value="Auto Finance"]')?.checked ? 'Yes' : 'No',
+                
+                // Data Integration
+                'FICO_Tokenization': formData.get('tokenization') || '',
+                'RBTRAN_Format': formData.get('RBTRAN') || '',
+                'PITRAN_Format': formData.get('PITRAN') || '',
+                'AIS_Format': formData.get('AIS') || '',
+                'CIS_Format': formData.get('CIS') || '',
+                'FRD_Format': formData.get('FRD') || '',
+                'Ledger_Format': formData.get('Ledger') || '',
+                'NMON_Format': formData.get('NMON') || '',
+                'PIS_Format': formData.get('PIS') || '',
+                'SCAM_Format': formData.get('SCAM') || '',
+                'ExternalData_Format': formData.get('ExternalData') || '',
+                'MerchantDemo_Format': formData.get('MerchantDemo') || '',
+                'ApplicationData_Format': formData.get('ApplicationData') || '',
+                
+                // Analytics
+                'FICO_Models_InScope': formData.get('ficoModel') || '',
+                'FICO_Models_Count': formData.get('ficoModelCount') || '',
+                'Client_Models_InScope': formData.get('clientModel') || '',
+                'Client_Models_Count': formData.get('clientModelCount') || '',
+                
+                // Communication Services
+                'Notification_System_InScope': formData.get('notificationSystem') || '',
+                'Notification_Interface_Details': formData.get('notificationDetails') || '',
+                
+                // Case Manager
+                'Case_Manager': formData.get('caseManager') || '',
+                'Transaction_Case_Manager': document.querySelector('input[name="transactionCaseManager"][value="Transaction Case Manager"]')?.checked ? 'Yes' : 'No',
+                'Customer_Case_Manager': document.querySelector('input[name="transactionCaseManager"][value="Customer Case Manager"]')?.checked ? 'Yes' : 'No',
+                'Investigative_Case_Manager': document.querySelector('input[name="transactionCaseManager"][value="Investigative Case Manager"]')?.checked ? 'Yes' : 'No',
+                'Transaction_CM_Custom_UI': document.querySelector('input[name="transactionCaseManager"][value="Custom UI For Case Manager"]')?.checked ? 'Yes' : 'No',
+                'Application_Case_Manager': document.querySelector('input[name="applicationCaseManager"][value="Application case Manager"]')?.checked ? 'Yes' : 'No',
+                'Application_CM_Custom_UI': document.querySelector('input[name="applicationCaseManager"][value="Custom UI For Case Manager"]')?.checked ? 'Yes' : 'No',
+                'Merchant_Case_Manager': document.querySelector('input[name="merchantCaseManager"][value="Merchant case Manager"]')?.checked ? 'Yes' : 'No',
+                'Merchant_CM_Custom_UI': document.querySelector('input[name="merchantCaseManager"][value="Custom UI For Case Manager"]')?.checked ? 'Yes' : 'No',
+                
+                // Rules Support
+                'Rules_Support_Model': formData.get('rulesSupport') || '',
+                
+                // Rollout Strategy - New fields
+                'Multi_Country_Rollout': formData.get('multiCountry') || '',
+                'Number_of_Countries': formData.get('countryCount') || '',
+                'Multi_Phased_Rollout': formData.get('multiPhased') || '',
+                'Number_of_Phases': formData.get('phaseCount') || ''
+            };
+
+            // Generate CSV header and data
+            const headers = Object.keys(csvData);
+            const values = Object.values(csvData);
+            
+            const csvString = headers.join(',') + '\n' + values.map(value => `"${value}"`).join(',');
+            
+            return csvString;
+        }
+
+        // Function to generate comprehensive HTML summary matching left nav
+        function generateHTMLSummary() {
+            const timestamp = new Date().toLocaleString();
+            
+            let htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS Scoping Summary - FICO Enterprise Fraud Solution</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #0A6DE6;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 24px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #0A6DE6;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .item {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid #0A6DE6;
+            font-size: 14px;
+        }
+        .empty-item {
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 8px 12px;
+            background: #ecf0f1;
+            border-radius: 4px;
+        }
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 14px;
+            text-align: right;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PS Scoping Summary - FICO Enterprise Fraud Solution</h1>
+`;
+
+            // Client Information section
+            htmlContent += '<div class="section"><div class="section-title">Client Information</div>';
+            let hasClientInfo = false;
+            
+            const region = document.querySelector('input[name="region"]:checked');
+            if (region) {
+                htmlContent += `<div class="item">Region: ${region.value}</div>`;
+                hasClientInfo = true;
+            }
+            
+            const clientName = document.getElementById('clientName').value;
+            if (clientName) {
+                htmlContent += `<div class="item">Client Name: ${clientName}</div>`;
+                hasClientInfo = true;
+            }
+            
+            const opportunityNumber = document.getElementById('opportunityNumber').value;
+            if (opportunityNumber) {
+                htmlContent += `<div class="item">Opportunity Number: ${opportunityNumber}</div>`;
+                hasClientInfo = true;
+            }
+            
+            const customerType = document.querySelector('input[name="customerType"]:checked');
+            if (customerType) {
+                htmlContent += `<div class="item">Customer Type: ${customerType.value}</div>`;
+                hasClientInfo = true;
+            }
+            
+            const existingUser = document.querySelector('input[name="existingUser"]:checked');
+            if (existingUser) {
+                htmlContent += `<div class="item">Existing FICO Fraud Solution User: ${existingUser.value}</div>`;
+                hasClientInfo = true;
+            }
+            
+            if (!hasClientInfo) {
+                htmlContent += '<div class="empty-item">No information provided</div>';
+            }
+            htmlContent += '</div>';
+
+            // Use Cases section
+            htmlContent += '<div class="section"><div class="section-title">Use Cases</div>';
+            let hasUseCases = false;
+            
+            if (document.getElementById('transactionFraud').checked) {
+                htmlContent += '<div class="item">Transaction Fraud</div>';
+                hasUseCases = true;
+            }
+            if (document.getElementById('acquiringFraud').checked) {
+                htmlContent += '<div class="item">Acquiring Fraud</div>';
+                hasUseCases = true;
+            }
+            if (document.getElementById('applicationFraud').checked) {
+                htmlContent += '<div class="item">Application Fraud</div>';
+                hasUseCases = true;
+            }
+            
+            if (!hasUseCases) {
+                htmlContent += '<div class="empty-item">No use cases selected</div>';
+            }
+            htmlContent += '</div>';
+
+            // Channels & Options section
+            htmlContent += '<div class="section"><div class="section-title">Channels & Options</div>';
+            let hasChannels = false;
+            
+            document.querySelectorAll('input[name="transactionChannels"]:checked').forEach(channel => {
+                htmlContent += `<div class="item">Transaction Channel: ${channel.value}</div>`;
+                hasChannels = true;
+            });
+            
+            document.querySelectorAll('input[name="acquiringOptions"]:checked').forEach(option => {
+                htmlContent += `<div class="item">Acquiring Option: ${option.value}</div>`;
+                hasChannels = true;
+            });
+            
+            document.querySelectorAll('input[name="applicationOptions"]:checked').forEach(option => {
+                htmlContent += `<div class="item">Application Option: ${option.value}</div>`;
+                hasChannels = true;
+            });
+            
+            if (!hasChannels) {
+                htmlContent += '<div class="empty-item">No channels selected</div>';
+            }
+            htmlContent += '</div>';
+
+            // Data Formats section
+            htmlContent += '<div class="section"><div class="section-title">Data Formats</div>';
+            let hasDataFormats = false;
+            
+            const tokenization = document.querySelector('input[name="tokenization"]:checked');
+            if (tokenization) {
+                htmlContent += `<div class="item">Tokenization: ${tokenization.value}</div>`;
+                hasDataFormats = true;
+            }
+
+            // Data format selections
+            const dataFormatInputs = document.querySelectorAll('.data-formats-table input[type="radio"]:checked');
+            dataFormatInputs.forEach(input => {
+                const dataType = input.name;
+                const format = input.value;
+                htmlContent += `<div class="item">${dataType}: ${format}</div>`;
+                hasDataFormats = true;
+            });
+            
+            if (!hasDataFormats) {
+                htmlContent += '<div class="empty-item">No formats selected</div>';
+            }
+            htmlContent += '</div>';
+
+            // Analytics section
+            htmlContent += '<div class="section"><div class="section-title">Analytics</div>';
+            let hasAnalytics = false;
+            
+            const ficoModel = document.querySelector('input[name="ficoModel"]:checked');
+            if (ficoModel && ficoModel.value === 'Yes') {
+                const count = document.querySelector('input[name="ficoModelCount"]:checked');
+                htmlContent += `<div class="item">FICO Models: ${count ? count.value : 'Count not specified'}</div>`;
+                hasAnalytics = true;
+            }
+
+            const clientModel = document.querySelector('input[name="clientModel"]:checked');
+            if (clientModel && clientModel.value === 'Yes') {
+                const count = document.querySelector('input[name="clientModelCount"]:checked');
+                htmlContent += `<div class="item">Client Models: ${count ? count.value : 'Count not specified'}</div>`;
+                hasAnalytics = true;
+            }
+            
+            if (!hasAnalytics) {
+                htmlContent += '<div class="empty-item">No analytics selected</div>';
+            }
+            htmlContent += '</div>';
+
+            // Services section
+            htmlContent += '<div class="section"><div class="section-title">Services</div>';
+            let hasServices = false;
+            
+            const notificationSystem = document.querySelector('input[name="notificationSystem"]:checked');
+            if (notificationSystem && notificationSystem.value === 'Yes') {
+                htmlContent += '<div class="item">Notification System: Yes</div>';
+                hasServices = true;
+                
+                const notificationDetails = document.querySelector('input[name="notificationDetails"]:checked');
+                if (notificationDetails) {
+                    htmlContent += `<div class="item">Notification Details: ${notificationDetails.value}</div>`;
+                }
+            }
+
+            const caseManager = document.querySelector('input[name="caseManager"]:checked');
+            if (caseManager && caseManager.value === 'Yes') {
+                htmlContent += '<div class="item">Case Manager: Yes</div>';
+                hasServices = true;
+                
+                // Case Manager modules
+                const transactionCM = document.querySelectorAll('input[name="transactionCaseManager"]:checked');
+                transactionCM.forEach(cm => {
+                    htmlContent += `<div class="item">CM Module: ${cm.value}</div>`;
+                });
+
+                const applicationCM = document.querySelectorAll('input[name="applicationCaseManager"]:checked');
+                applicationCM.forEach(cm => {
+                    htmlContent += `<div class="item">CM Module: ${cm.value}</div>`;
+                });
+
+                const merchantCM = document.querySelectorAll('input[name="merchantCaseManager"]:checked');
+                merchantCM.forEach(cm => {
+                    htmlContent += `<div class="item">CM Module: ${cm.value}</div>`;
+                });
+            }
+
+            const rulesSupport = document.querySelector('input[name="rulesSupport"]:checked');
+            if (rulesSupport) {
+                htmlContent += `<div class="item">Rules Support: ${rulesSupport.value}</div>`;
+                hasServices = true;
+            }
+            
+            if (!hasServices) {
+                htmlContent += '<div class="empty-item">No services selected</div>';
+            }
+            htmlContent += '</div>';
+
+            // Rollout Strategy section
+            htmlContent += '<div class="section"><div class="section-title">Rollout Strategy</div>';
+            let hasRollout = false;
+            
+            const multiCountry = document.querySelector('input[name="multiCountry"]:checked');
+            if (multiCountry) {
+                htmlContent += `<div class="item">Multi-Country Rollout: ${multiCountry.value}</div>`;
+                hasRollout = true;
+                
+                if (multiCountry.value === 'Yes') {
+                    const countryCount = document.querySelector('input[name="countryCount"]').value;
+                    htmlContent += `<div class="item">Number of Countries: ${countryCount}</div>`;
+                }
+            }
+
+            const multiPhased = document.querySelector('input[name="multiPhased"]:checked');
+            if (multiPhased) {
+                htmlContent += `<div class="item">Multi-Phased Rollout: ${multiPhased.value}</div>`;
+                hasRollout = true;
+                
+                if (multiPhased.value === 'Yes') {
+                    const phaseCount = document.querySelector('input[name="phaseCount"]').value;
+                    htmlContent += `<div class="item">Number of Phases: ${phaseCount}</div>`;
+                }
+            }
+            
+            if (!hasRollout) {
+                htmlContent += '<div class="empty-item">No rollout strategy selected</div>';
+            }
+            htmlContent += '</div>';
+
+            htmlContent += `
+        <div class="timestamp">Generated on: ${timestamp}</div>
+    </div>
+</body>
+</html>`;
+
+            return htmlContent;
+        }
+
+        // Function to download files
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type + ';charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Section navigation functions
+        function showSection(index) {
+            sections.forEach((sectionId, i) => {
+                const section = document.getElementById(sectionId);
+                if (i === index) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            // Update breadcrumbs
+            breadcrumbSteps.forEach((stepId, i) => {
+                const step = document.getElementById(stepId);
+                if (i < index) {
+                    step.className = 'breadcrumb-step completed';
+                } else if (i === index) {
+                    step.className = 'breadcrumb-step active';
+                } else {
+                    step.className = 'breadcrumb-step pending';
+                }
+            });
+
+            // Update navigation buttons
+            prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+            if (index === sections.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+
+            currentSection = index;
+            updateProgress();
+        }
+
+        function nextSection() {
+            const validationErrors = validateCurrentSection();
+            if (showValidationMessage(validationErrors)) {
+                if (currentSection < sections.length - 1) {
+                    showSection(currentSection + 1);
+                }
+            }
+        }
+
+        function previousSection() {
+            if (currentSection > 0) {
+                showSection(currentSection - 1);
+            }
+        }
+
+        // Summary update functions
+        function updateClientInfoSummary() {
+            const items = [];
+            
+            const region = document.querySelector('input[name="region"]:checked');
+            if (region) items.push(`Region: ${region.value}`);
+            
+            const clientName = document.getElementById('clientName').value;
+            if (clientName) items.push(`Client: ${clientName}`);
+            
+            const opportunityNumber = document.getElementById('opportunityNumber').value;
+            if (opportunityNumber) items.push(`Opportunity: ${opportunityNumber}`);
+            
+            const customerType = document.querySelector('input[name="customerType"]:checked');
+            if (customerType) items.push(`Type: ${customerType.value}`);
+            
+            const existingUser = document.querySelector('input[name="existingUser"]:checked');
+            if (existingUser) items.push(`User Type: ${existingUser.value}`);
+
+            if (items.length > 0) {
+                summaryElements.clientInfo.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.clientInfo.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.clientInfo, 'No information provided');
+            }
+        }
+
+        function updateUseCasesSummary() {
+            const items = [];
+            
+            if (document.getElementById('transactionFraud').checked) {
+                items.push('Transaction Fraud');
+            }
+            if (document.getElementById('acquiringFraud').checked) {
+                items.push('Acquiring Fraud');
+            }
+            if (document.getElementById('applicationFraud').checked) {
+                items.push('Application Fraud');
+            }
+
+            if (items.length > 0) {
+                summaryElements.useCases.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.useCases.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.useCases, 'No use cases selected');
+            }
+        }
+
+        function updateChannelsSummary() {
+            const items = [];
+            
+            // Transaction channels
+            document.querySelectorAll('input[name="transactionChannels"]:checked').forEach(channel => {
+                items.push(`Channel: ${channel.value}`);
+            });
+
+            // Acquiring options
+            document.querySelectorAll('input[name="acquiringOptions"]:checked').forEach(option => {
+                items.push(`Acquiring: ${option.value}`);
+            });
+
+            // Application options
+            document.querySelectorAll('input[name="applicationOptions"]:checked').forEach(option => {
+                items.push(`Application: ${option.value}`);
+            });
+
+            if (items.length > 0) {
+                summaryElements.channels.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.channels.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.channels, 'No channels selected');
+            }
+        }
+
+        function updateDataFormatsSummary() {
+            const items = [];
+            
+            const tokenization = document.querySelector('input[name="tokenization"]:checked');
+            if (tokenization) items.push(`Tokenization: ${tokenization.value}`);
+
+            // Data format selections
+            const dataFormatInputs = document.querySelectorAll('.data-formats-table input[type="radio"]:checked');
+            dataFormatInputs.forEach(input => {
+                const dataType = input.name;
+                const format = input.value;
+                items.push(`${dataType}: ${format}`);
+            });
+
+            if (items.length > 0) {
+                summaryElements.dataFormats.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.dataFormats.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.dataFormats, 'No formats selected');
+            }
+        }
+
+        function updateAnalyticsSummary() {
+            const items = [];
+            
+            const ficoModel = document.querySelector('input[name="ficoModel"]:checked');
+            if (ficoModel && ficoModel.value === 'Yes') {
+                const count = document.querySelector('input[name="ficoModelCount"]:checked');
+                items.push(`FICO Models: ${count ? count.value : 'Count not specified'}`);
+            }
+
+            const clientModel = document.querySelector('input[name="clientModel"]:checked');
+            if (clientModel && clientModel.value === 'Yes') {
+                const count = document.querySelector('input[name="clientModelCount"]:checked');
+                items.push(`Client Models: ${count ? count.value : 'Count not specified'}`);
+            }
+
+            if (items.length > 0) {
+                summaryElements.analytics.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.analytics.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.analytics, 'No analytics selected');
+            }
+        }
+
+        function updateServicesSummary() {
+            const items = [];
+            
+            const notificationSystem = document.querySelector('input[name="notificationSystem"]:checked');
+            if (notificationSystem && notificationSystem.value === 'Yes') {
+                items.push('Notification System: Yes');
+                const notificationDetails = document.querySelector('input[name="notificationDetails"]:checked');
+                if (notificationDetails) {
+                    items.push(`Notification Details: ${notificationDetails.value}`);
+                }
+            }
+
+            const caseManager = document.querySelector('input[name="caseManager"]:checked');
+            if (caseManager && caseManager.value === 'Yes') {
+                items.push('Case Manager: Yes');
+                
+                // Case Manager modules
+                document.querySelectorAll('input[name="transactionCaseManager"]:checked').forEach(cm => {
+                    items.push(`CM Module: ${cm.value}`);
+                });
+
+                document.querySelectorAll('input[name="applicationCaseManager"]:checked').forEach(cm => {
+                    items.push(`CM Module: ${cm.value}`);
+                });
+
+                document.querySelectorAll('input[name="merchantCaseManager"]:checked').forEach(cm => {
+                    items.push(`CM Module: ${cm.value}`);
+                });
+            }
+
+            const rulesSupport = document.querySelector('input[name="rulesSupport"]:checked');
+            if (rulesSupport) items.push(`Rules Support: ${rulesSupport.value}`);
+
+            if (items.length > 0) {
+                summaryElements.services.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.services.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.services, 'No services selected');
+            }
+        }
+
+        function updateRolloutSummary() {
+            const items = [];
+            
+            const multiCountry = document.querySelector('input[name="multiCountry"]:checked');
+            if (multiCountry) {
+                items.push(`Multi-Country: ${multiCountry.value}`);
+                if (multiCountry.value === 'Yes') {
+                    const countryCount = document.querySelector('input[name="countryCount"]').value;
+                    items.push(`Countries: ${countryCount}`);
+                }
+            }
+
+            const multiPhased = document.querySelector('input[name="multiPhased"]:checked');
+            if (multiPhased) {
+                items.push(`Multi-Phased: ${multiPhased.value}`);
+                if (multiPhased.value === 'Yes') {
+                    const phaseCount = document.querySelector('input[name="phaseCount"]').value;
+                    items.push(`Phases: ${phaseCount}`);
+                }
+            }
+
+            if (items.length > 0) {
+                summaryElements.rollout.innerHTML = '';
+                items.forEach(item => {
+                    summaryElements.rollout.appendChild(createSummaryItem(item));
+                });
+            } else {
+                showEmptyState(summaryElements.rollout, 'No rollout strategy selected');
+            }
+        }
+
+        function updateAllSummaries() {
+            updateClientInfoSummary();
+            updateUseCasesSummary();
+            updateChannelsSummary();
+            updateDataFormatsSummary();
+            updateAnalyticsSummary();
+            updateServicesSummary();
+            updateRolloutSummary();
+        }
+
+        function updateProgress() {
+            const progress = ((currentSection + 1) / sections.length) * 100;
+            progressFill.style.width = progress + '%';
+            progressText.textContent = Math.round(progress) + '% Complete';
+        }
+
+        // Conditional logic functions
+        function updateConditionalSections() {
+            const transactionFraud = document.getElementById('transactionFraud').checked;
+            const acquiringFraud = document.getElementById('acquiringFraud').checked;
+            const applicationFraud = document.getElementById('applicationFraud').checked;
+
+            // Show/hide conditional sections
+            document.getElementById('transactionChannelsSection').classList.toggle('show', transactionFraud);
+            document.getElementById('acquiringOptionsSection').classList.toggle('show', acquiringFraud);
+            document.getElementById('applicationOptionsSection').classList.toggle('show', applicationFraud);
+
+            updateCaseManagerSections();
+        }
+
+        function updateModelCountSections() {
+            const ficoModelYes = document.getElementById('ficoModelYes').checked;
+            const clientModelYes = document.getElementById('clientModelYes').checked;
+
+            document.getElementById('ficoModelCountSection').classList.toggle('show', ficoModelYes);
+            document.getElementById('clientModelCountSection').classList.toggle('show', clientModelYes);
+        }
+
+        function updateNotificationDetailsSection() {
+            const notificationYes = document.getElementById('notificationYes').checked;
+            document.getElementById('notificationDetailsSection').classList.toggle('show', notificationYes);
+        }
+
+        function updateCaseManagerSections() {
+            const caseManagerYes = document.getElementById('caseManagerYes')?.checked || false;
+            const transactionFraud = document.getElementById('transactionFraud').checked;
+            const applicationFraud = document.getElementById('applicationFraud').checked;
+            const merchantMonitoring = document.querySelector('input[name="acquiringOptions"][value="Merchant Monitoring"]')?.checked || false;
+
+            document.getElementById('transactionCaseManagerSection').classList.toggle('show', caseManagerYes && transactionFraud);
+            document.getElementById('applicationCaseManagerSection').classList.toggle('show', caseManagerYes && applicationFraud);
+            document.getElementById('merchantCaseManagerSection').classList.toggle('show', caseManagerYes && merchantMonitoring);
+        }
+
+        function updateRolloutSections() {
+            const multiCountryYes = document.getElementById('multiCountryYes').checked;
+            const multiPhasedYes = document.getElementById('multiPhasedYes').checked;
+
+            document.getElementById('countryCountSection').classList.toggle('show', multiCountryYes);
+            document.getElementById('phaseCountSection').classList.toggle('show', multiPhasedYes);
+        }
+
+        // Slider event listeners
+        countrySlider.addEventListener('input', function() {
+            countryValue.textContent = this.value;
+            updateAllSummaries();
+        });
+
+        phaseSlider.addEventListener('input', function() {
+            phaseValue.textContent = this.value;
+            updateAllSummaries();
+        });
+
+        // Event listeners
+        prevBtn.addEventListener('click', previousSection);
+        nextBtn.addEventListener('click', nextSection);
+
+        // Use case checkboxes
+        document.getElementById('transactionFraud').addEventListener('change', function() {
+            updateConditionalSections();
+            updateAllSummaries();
+        });
+
+        document.getElementById('acquiringFraud').addEventListener('change', function() {
+            updateConditionalSections();
+            updateAllSummaries();
+        });
+
+        document.getElementById('applicationFraud').addEventListener('change', function() {
+            updateConditionalSections();
+            updateAllSummaries();
+        });
+
+        // Channel and option checkboxes
+        document.querySelectorAll('input[name="transactionChannels"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateAllSummaries);
+        });
+
+        document.querySelectorAll('input[name="acquiringOptions"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateCaseManagerSections();
+                updateAllSummaries();
+            });
+        });
+
+        document.querySelectorAll('input[name="applicationOptions"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateAllSummaries);
+        });
+
+        // Client info inputs
+        document.querySelectorAll('input[name="region"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        document.getElementById('clientName').addEventListener('input', updateAllSummaries);
+        document.getElementById('opportunityNumber').addEventListener('input', updateAllSummaries);
+
+        document.querySelectorAll('input[name="customerType"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        document.querySelectorAll('input[name="existingUser"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        // Data format inputs
+        document.querySelectorAll('input[name="tokenization"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        document.querySelectorAll('.data-formats-table input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        // Analytics inputs
+        document.getElementById('ficoModelYes').addEventListener('change', function() {
+            updateModelCountSections();
+            updateAllSummaries();
+        });
+
+        document.querySelector('input[name="ficoModel"][value="No"]').addEventListener('change', function() {
+            updateModelCountSections();
+            updateAllSummaries();
+        });
+
+        document.getElementById('clientModelYes').addEventListener('change', function() {
+            updateModelCountSections();
+            updateAllSummaries();
+        });
+
+        document.querySelector('input[name="clientModel"][value="No"]').addEventListener('change', function() {
+            updateModelCountSections();
+            updateAllSummaries();
+        });
+
+        document.querySelectorAll('input[name="ficoModelCount"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        document.querySelectorAll('input[name="clientModelCount"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        // Communication Services inputs
+        document.getElementById('notificationYes').addEventListener('change', function() {
+            updateNotificationDetailsSection();
+            updateAllSummaries();
+        });
+
+        document.querySelector('input[name="notificationSystem"][value="No"]').addEventListener('change', function() {
+            updateNotificationDetailsSection();
+            updateAllSummaries();
+        });
+
+        document.querySelectorAll('input[name="notificationDetails"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        // Case Manager inputs
+        if (document.getElementById('caseManagerYes')) {
+            document.getElementById('caseManagerYes').addEventListener('change', function() {
+                updateCaseManagerSections();
+                updateAllSummaries();
+            });
+        }
+
+        document.querySelector('input[name="caseManager"][value="No"]').addEventListener('change', function() {
+            updateCaseManagerSections();
+            updateAllSummaries();
+        });
+
+        document.querySelectorAll('input[name="transactionCaseManager"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateAllSummaries);
+        });
+
+        document.querySelectorAll('input[name="applicationCaseManager"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateAllSummaries);
+        });
+
+        document.querySelectorAll('input[name="merchantCaseManager"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateAllSummaries);
+        });
+
+        // Rules Support inputs
+        document.querySelectorAll('input[name="rulesSupport"]').forEach(radio => {
+            radio.addEventListener('change', updateAllSummaries);
+        });
+
+        // Rollout Strategy inputs
+        document.getElementById('multiCountryYes').addEventListener('change', function() {
+            updateRolloutSections();
+            updateAllSummaries();
+        });
+
+        document.querySelector('input[name="multiCountry"][value="No"]').addEventListener('change', function() {
+            updateRolloutSections();
+            updateAllSummaries();
+        });
+
+        document.getElementById('multiPhasedYes').addEventListener('change', function() {
+            updateRolloutSections();
+            updateAllSummaries();
+        });
+
+        document.querySelector('input[name="multiPhased"][value="No"]').addEventListener('change', function() {
+            updateRolloutSections();
+            updateAllSummaries();
+        });
+
+        // Download button event listeners
+        downloadCsvBtn.addEventListener('click', function() {
+            const csvData = generateCSVContent();
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            const filename = `PS_Scoping_Requirements_${timestamp}.csv`;
+            downloadFile(csvData, filename, 'text/csv');
+        });
+
+        downloadHtmlBtn.addEventListener('click', function() {
+            const htmlData = generateHTMLSummary();
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+            const filename = `PS_Scoping_Summary_${timestamp}.html`;
+            downloadFile(htmlData, filename, 'text/html');
+        });
+
+        // Form submission
+        document.getElementById('scopingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Final validation
+            const validationErrors = validateCurrentSection();
+            if (!showValidationMessage(validationErrors)) {
+                return;
+            }
+            
+            // Generate and display outputs
+            const csvData = generateCSVContent();
+            const htmlData = generateHTMLSummary();
+            
+            csvContent.textContent = csvData;
+            htmlContent.textContent = htmlData;
+            outputDisplay.classList.add('show');
+            
+            // Mark all steps as completed
+            breadcrumbSteps.forEach(stepId => {
+                document.getElementById(stepId).className = 'breadcrumb-step completed';
+            });
+
+            progressFill.style.width = '100%';
+            progressText.textContent = '100% Complete';
+
+            console.log('Scoping Requirements Submitted');
+            alert('Scoping requirements submitted successfully! CSV and HTML files are ready for download.');
+
+            submitBtn.textContent = 'Submitted Successfully';
+            submitBtn.disabled = true;
+            submitBtn.style.backgroundColor = '#2ecc71';
+        });
+
+        // Initialize
+        showSection(0);
+        updateAllSummaries();
+        updateConditionalSections();
+    </script>
+</body>
+</html>
