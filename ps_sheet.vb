@@ -4,7 +4,12 @@
 '
 
 Option Explicit
-Const RANGE_RESET As String = "C8:C20"
+Const RANGE_RESET As String = "C9:D21"
+
+' used for multi-select dropdowns
+Const RANGE_MULTI_SELECT_1 As String = "C10:C12"
+Const RANGE_MULTI_SELECT_2 As String = "C10:C12"
+Const RANGE_MULTI_SELECT_MODELS As String = "C18:C19"
 
 Private Sub Worksheet_Activate()
     On Error Resume Next
@@ -25,24 +30,55 @@ Private Sub Worksheet_Activate()
 End Sub
 Sub Worksheet_Change(ByVal Target As Range)
     On Error Resume Next
+
     ThisWorkbook.UnProtect_This_Sheet
+
+    Dim oldValue As String
+    Dim newValue As String
+
+    ' we have to do this here because Excel doesn't allow Application.undo inside the dropdown change event
+    ' and even moving to inside one of the IFs below causes issues.
+    Application.EnableEvents = False
+    With Target
+        newValue = .Value2
+        Application.Undo
+        oldValue = .Value2
+        .Value2 = newValue
+    End With
+    Application.EnableEvents = True
 
     Dim Cell As Range
     For Each Cell In Application.ActiveSheet.usedRange
         ThisWorkbook.CheckRequiredCell Cell
     Next
 
-    Target.AutoFit
+    Dim rngValidatedCells As Range
+
+     'this gets a range that has ALL CELLS with VALIDATIONS (of any type)
+    Set rngValidatedCells = Cells.SpecialCells(xlCellTypeAllValidation)
+
+    ' if we have cells with validation on this sheet and the one that changed is a cell with validation
+    If Not rngValidatedCells Is Nothing Then
+        ' if cell that changed has a validation
+        If Not Intersect(Target, rngValidatedCells) Is Nothing Then
+             'if the validation type is list... then do the multi-select logic...
+            If Target.Validation.Type = xlValidateList Then
+                Call DropdownMultiSelect(Target, oldValue, newValue)
+            End If
+        End If
+    End If
+
+    'Target.AutoFit
     ThisWorkbook.Protect_This_Sheet
 End Sub
 Sub ResetButton()
-
+    On Error Resume Next
     ThisWorkbook.UnProtect_This_Sheet
 
     ButtonOn button:=ActiveSheet.Shapes("ResetButton")
 
     Dim userResponse As VbMsgBoxResult
-    userResponse = MsgBox("SOME data on this tab will clear and some comes from another tab.", vbOKCancel, "Please Note!")
+    userResponse = MsgBox("Clear data on the PS tab.", vbOKCancel, "Please Note!")
 
     If userResponse = vbCancel Then
         ButtonOff button:=ActiveSheet.Shapes("ResetButton")
@@ -106,4 +142,71 @@ Private Function ButtonStatus(button As Shape) As Boolean
     Else
         ButtonStatus = True
     End If
+End Function
+Sub DropdownMultiSelect(Target As Range, oldValue As String, newValue As String)
+    'On Error Resume Next
+
+    'ThisWorkbook.UnProtect_This_Sheet
+    Dim DelimiterType As String
+    DelimiterType = ", "
+
+    ' there are only certain cells that I want to allow multi-select...
+    ' we've already filtered cells with validation (in general) and cells (more specifically) that have the "list validation" metadata
+    ' but now we want to allow this only for specific cells... which is where the below is used
+    Dim MULTI_FIRST As Range
+    Dim MULTI_SECOND As Range
+    Dim MULTI_THIRD As Range
+
+    Dim MULTI_SELECT_CELLS As Range
+
+    ' besides hoping to make maintenance simpler
+    ' there are limits to the number of unions and the number of "line continuation"
+
+    Set MULTI_SELECT_CELLS = Union(Range(RANGE_MULTI_SELECT_1), Range(RANGE_MULTI_SELECT_2), Range(RANGE_MULTI_SELECT_MODELS))
+
+    On Error Resume Next
+
+   'did the change happen where we are interested?
+    Dim inMultiSelectCell As Range
+    Set inMultiSelectCell = Intersect(Target, MULTI_SELECT_CELLS)
+
+    If inMultiSelectCell Is Nothing Then
+        Exit Sub
+    End If
+
+    If oldValue = "" Or newValue = "" Then
+         Exit Sub
+    End If
+
+    Dim isDuplicate As Boolean
+    isDuplicate = CheckAlreadyInList(oldValue, newValue)
+
+    If Not isDuplicate Then
+         Application.EnableEvents = False
+         Target.Value2 = oldValue & DelimiterType & newValue
+          Application.EnableEvents = True
+    End If
+
+    'ThisWorkbook.Protect_This_Sheet
+End Sub
+Function CheckAlreadyInList(theList As String, newValue As String) As Boolean
+    ' try to disallow duplicates in the multi-select list
+    On Error Resume Next
+    Dim items As Variant
+    Dim item As Variant
+    Dim trimmedItem As String
+    Dim trimmedNewValue As String
+
+    trimmedNewValue = Trim(newValue)
+    items = Split(theList, ",")
+
+    For Each item In items
+        trimmedItem = Trim(item)
+        If StrComp(trimmedItem, trimmedNewValue, vbTextCompare) = 0 Then
+            CheckAlreadyInList = True
+            Exit Function
+        End If
+    Next
+
+    CheckAlreadyInList = False
 End Function
