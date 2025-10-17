@@ -182,9 +182,12 @@ Sub DropdownMultiSelect(Target As Range, oldValue As String, newValue As String)
     isDuplicate = CheckAlreadyInList(oldValue, newValue)
 
     If Not isDuplicate Then
-         Application.EnableEvents = False
-         Target.Value2 = oldValue & DelimiterType & newValue
-          Application.EnableEvents = True
+        Application.EnableEvents = False
+        Target.Value2 = oldValue & DelimiterType & newValue
+        Application.EnableEvents = True
+    Else
+        ' we have to pt back the prior value because otherwise it keeps the new and loses the list.
+        Target.Value2 = oldValue
     End If
 
     'ThisWorkbook.Protect_This_Sheet
