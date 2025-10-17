@@ -4,7 +4,8 @@
 '
 
 Option Explicit
-Const RANGE_RESET As String = "C9:D21"
+Const RANGE_PS_RESET_1 As String = "C9:D21"
+Const RANGE_PS_RESET_2 As String = "C26:C37"
 
 ' used for multi-select dropdowns
 Const RANGE_MULTI_SELECT_1 As String = "C10:C12"
@@ -86,7 +87,8 @@ Sub ResetButton()
     End If
 
     Application.EnableEvents = False
-    Range(RANGE_RESET).ClearContents
+    Range(RANGE_PS_RESET_1).ClearContents
+    Range(RANGE_PS_RESET_2).ClearContents
 
     Range("D12").Value2 = "You can make a list by selecting multiple items."
     Range("D14").Value2 = "You can make a list by selecting multiple items."
