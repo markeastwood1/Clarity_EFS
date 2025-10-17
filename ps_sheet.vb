@@ -87,6 +87,15 @@ Sub ResetButton()
 
     Application.EnableEvents = False
     Range(RANGE_RESET).ClearContents
+
+    Range("D12").Value2 = "You can make a list by selecting multiple items."
+    Range("D14").Value2 = "You can make a list by selecting multiple items."
+    Range("D18").Value2 = "You can make a list by selecting multiple items."
+    Range("D19").Value2 = "You can make a list by selecting multiple items."
+
+    Range("D15").Value2 = "What do we know about the client model(s)?"
+    Range("D20").Value2 = "Document what we know about the strategy."
+    Range("D21").Value2 = "Document what we know about the strategy."
     Application.EnableEvents = True
 
     ButtonOff button:=ActiveSheet.Shapes("ResetButton")
