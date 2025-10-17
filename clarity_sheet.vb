@@ -10,9 +10,9 @@ Const RANGE_USE_CASE As String = "C25"
 Const RANGE_USE_CASE_SHEET As String = "UseCase Map"
 Const RANGE_USE_CASE_MAP As String = "A2:B47"
 
-Const RANGE_MODELS_QUESTION As String = "C36"
-Const RANGE_MODELS_PROVIDER As String = "C37"
-Const RANGE_MODEL_QUESTIONS As String = "A37:A39"
+Const RANGE_MODELS_QUESTION As String = "C26"
+Const RANGE_MODELS_PROVIDER As String = "C27"
+Const RANGE_MODEL_QUESTIONS As String = "A27:A28"
 
 Sub Worksheet_Activate()
     ' process the cells marked as required
@@ -30,6 +30,7 @@ Sub Worksheet_Activate()
     Application.EnableEvents = True
 
     ThisWorkbook.Protect_This_Sheet
+    showCaption
 End Sub
 Sub Worksheet_Change(ByVal Target As Range)
 ' Worksheet_Change() gets in-cell changes and Worksheet_SelectionChange only fires when the selection changes
@@ -41,6 +42,8 @@ Sub Worksheet_Change(ByVal Target As Range)
     For Each Cell In Application.ActiveSheet.UsedRange
         ThisWorkbook.CheckRequiredCell Cell
     Next
+
+    ShowHideModelsQuestions Target
 
     ThisWorkbook.Protect_This_Sheet
 End Sub
@@ -58,16 +61,18 @@ Sub ShowHideModelsQuestions(Target As Range)
         Exit Sub
     End If
 
-    If modelsAnswer.Value2 = "No" Or modelsAnswer.Value2 = "" Then
+    If modelsAnswer.Value2 = "No" Or modelsAnswer.Value2 = "" Or modelsAnswer.Value2 = "Uncertain" Then
     ' hide the rows
-         Dim r As Range
+        Dim r As Range
 
-         Range(RANGE_MODELS_PROVIDER).Value2 = ""
+        Application.EnableEvents = False
+        Range(RANGE_MODELS_PROVIDER).Value2 = ""
+        Application.EnableEvents = True
 
-         For Each r In Range(RANGE_MODEL_QUESTIONS).Rows
-             r.EntireRow.Hidden = True
-         Next r
-         Worksheets("Analytics").Visible = False
+        For Each r In Range(RANGE_MODEL_QUESTIONS).Rows
+            r.EntireRow.Hidden = True
+        Next r
+        'Worksheets("Analytics").Visible = False
     Else
         ' show the rows
         For Each r In Range(RANGE_MODEL_QUESTIONS).Rows
@@ -86,43 +91,41 @@ Sub ShowHideModelsTab(Target As Range)
 
     Case "FICO Models"
         Worksheets("Analytics").Visible = xlSheetVisible
-        Worksheets("Opti Models").Visible = xlVeryHidden
-    Case "FICO Models + FICO Optimization"
-        Worksheets("Analytics").Visible = xlSheetVisible
-        Worksheets("Opti Models").Visible = xlSheetVisible
-    Case "Optimization Only"
-        Worksheets("Analytics").Visible = xlVeryHidden
-        Worksheets("Opti Models").Visible = xlSheetVisible
+    '    Worksheets("Opti Models").Visible = xlVeryHidden
+    'Case "FICO Models + FICO Optimization"
+    '    Worksheets("Analytics").Visible = xlSheetVisible
+    '    Worksheets("Opti Models").Visible = xlSheetVisible
+    'Case "Optimization Only"
+    '    Worksheets("Analytics").Visible = xlVeryHidden
+    '    Worksheets("Opti Models").Visible = xlSheetVisible
     Case "AIID Analytic Services (add notes)"
         Worksheets("Analytics").Visible = xlSheetVisible
-        Worksheets("Opti Models").Visible = xlVeryHidden
+        'Worksheets("Opti Models").Visible = xlVeryHidden
     Case Else
         ' hide them
         Worksheets("Analytics").Visible = xlVeryHidden
-        Worksheets("Opti Models").Visible = xlVeryHidden
+    '    Worksheets("Opti Models").Visible = xlVeryHidden
 
     End Select
 
     ThisWorkbook.Structure_Protection_On
 End Sub
-
 Sub ShowAllTabs()
     ' this is a helper function I'm using as I test the other things I'm implementing here
     On Error Resume Next
 
-    ThisWorkbook.Structure_Protection_Off
-
     If ThisWorkbook.requestPassword = True Then
+        ThisWorkbook.Structure_Protection_Off
+
         Dim ws As Worksheet
         For Each ws In ActiveWorkbook.Worksheets
             ws.Visible = xlSheetVisible
         Next
 
+        ThisWorkbook.Structure_Protection_On
     End If
 
     ThisWorkbook.Worksheets("CLARITY").Activate
-
-    ThisWorkbook.Structure_Protection_On
 End Sub
 Sub ResetButton()
 
@@ -135,7 +138,7 @@ Sub ResetButton()
     ThisWorkbook.Structure_Protection_Off
 
     Dim userResponse As VbMsgBoxResult
-    userResponse = MsgBox("SOME data on this tab will clear and all the capability tabs will be hidden but WILL RETAIN ALL DATA previously input.", vbOKCancel, "Please Note!")
+    userResponse = MsgBox("SOME data on this tab will and some tabs will hide.", vbOKCancel, "Please Note!")
 
     If userResponse = vbCancel Then
         ButtonOff button:=ActiveSheet.Shapes("Reset")
@@ -161,11 +164,6 @@ Sub ShowProfessionalServices()
     On Error Resume Next
     ToggleButtonByName buttonName:="ProfessionalServices"
     ToggleTabByName tabname:="PS"
-End Sub
-Sub ShowSalesNotes()
-    On Error Resume Next
-    ToggleButtonByName buttonName:="SalesNotes"
-    ToggleTabByName tabname:="Sales Notes"
 End Sub
 Sub ShowReviewTabs()
     On Error Resume Next
@@ -199,21 +197,16 @@ Sub showCaption()
     ThisWorkbook.Structure_Protection_Off
     ActiveWindow.Caption = ActiveWorkbook.FullName
     ThisWorkbook.Structure_Protection_On
-
 End Sub
-' so the worksheets are locked meaning you can't just import images and
-' put them where you want... I had to invent a way to allow this to happen
-' while keeping the protections.
-' The the Clarity tab itself, I allow for 2 images ...
+' The worksheets are largely locked meaning you can't just import images and
+' put them where you want... this is how we allow that in a controlled way
 Sub ImportPictureFromFile1()
     On Error Resume Next
-    addImageByName "A88", "Picture 1"
-
+    addImageByName "A63", "Picture 1"
 End Sub
 Sub ImportPictureFromFile2()
     On Error Resume Next
-    addImageByName "D88", "Picture 2"
-
+    addImageByName "D63", "Picture 2"
 End Sub
 Sub DeletePicture1()
     On Error Resume Next
@@ -221,7 +214,6 @@ Sub DeletePicture1()
 
     deleteImageByName "Picture 1"
     ThisWorkbook.Protect_This_Sheet
-
 End Sub
 Sub DeletePicture2()
     On Error Resume Next
@@ -229,7 +221,6 @@ Sub DeletePicture2()
     ThisWorkbook.UnProtect_This_Sheet
     deleteImageByName "Picture 2"
     ThisWorkbook.Protect_This_Sheet
-
 End Sub
 Private Sub addImageByName(ByVal ImageLocation As String, ByVal ImageName As String)
     On Error Resume Next
@@ -265,7 +256,6 @@ Private Sub deleteImageByName(ByVal arg1 As String)
             pic.Delete
         End If
     Next pic
-
 End Sub
 Function GetWidthABC()
     On Error Resume Next
@@ -275,7 +265,6 @@ Function GetWidthABC()
     For i = 1 To 3 ' Columns A to E
         GetWidthABC = GetWidthABC + Columns(i).Width
     Next i
-
 End Function
 Sub SuperResetButton()
     On Error Resume Next
@@ -303,14 +292,17 @@ Sub Toggle_Workbook_Protection()
     ' this is a helper function I'm using as I test the other things I'm implementing here
     On Error Resume Next
 
+    ' turn on protection is ok without password
+    If ActiveWorkbook.ProtectStructure = False Then
+        ThisWorkbook.Structure_Protection_On
+        MsgBox "Workbook Structure Protected"
+        Exit Sub
+    End If
+
+    ' turning off protection requires password
     If ThisWorkbook.requestPassword = True Then
-        If ActiveWorkbook.ProtectStructure = True Then
-            ThisWorkbook.Structure_Protection_Off
-            MsgBox "Workbook Structure Unprotected"
-        Else
-            ThisWorkbook.Structure_Protection_On
-            MsgBox "Workbook Structure Protected"
-        End If
+        ThisWorkbook.Structure_Protection_Off
+        MsgBox "Workbook Structure Unprotected"
     Else
         MsgBox "Incorrect Password, status not changed."
     End If
